@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# 转换平台签名命令
+./keytool-importkeypair -k demo.jks -p 123456 -pk8 platform.pk8 -cert platform.x509.pem -alias demo
+
+# demo.jks : 签名文件
+# 123456 : 签名文件密码
+# platform.pk8、platform.x509.pem : 系统签名文件
+# demo : 签名文件别名
+
+
+--------------------------
+在android区域下(与defaultConfig同级)添加配置：
+signingConfigs {
+    release {
+        storeFile file("../signature/demo.jks")
+        storePassword '123456'
+        keyAlias 'demo'
+        keyPassword '123456'
+    }
+
+    debug {
+        storeFile file("../signature/demo.jks")
+        storePassword '123456'
+        keyAlias 'demo'
+        keyPassword '123456'
+    }
+}
+
+buildTypes {
+release {
+minifyEnabled false
+proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+signingConfig signingConfigs.release
+}
+}
+
